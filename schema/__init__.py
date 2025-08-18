@@ -1,3 +1,5 @@
 from schema.user import UserLoginSchema, UserCreateSchema
 from schema.taskschema import TaskCreateSchema, TaskSchema
-__all__ = ["UserLoginSchema","UserCreateSchema",'TaskCreateSchema','TaskSchema']
+from schema.auth import GoogleUserData, YandexUserData
+
+__all__ = ["UserLoginSchema", "UserCreateSchema", 'TaskCreateSchema', 'TaskSchema', 'GoogleUserData', 'YandexUserData']
