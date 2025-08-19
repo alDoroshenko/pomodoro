@@ -3,4 +3,4 @@
 .idea
 __pychache__/
 *.local*
-settings.py
+app/settings.py
