@@ -1,3 +1,4 @@
+import datetime
 from dataclasses import dataclass
 import datetime as dt
 from datetime import timedelta
@@ -7,7 +8,7 @@ from app.users.auth.client import GoogleClient, YandexClient
 from app.exception import UserNotFoundException, UserNotCorrectPasswordException, TokenExpired, TokenNotCorrect
 from app.users.user_profile.models import UserProfile
 from app.users.user_profile.repository import UserRepository
-from app.users.user_profile.schema import  UserCreateSchema
+from app.users.user_profile.schema import UserCreateSchema
 from app.users.auth.schema import UserLoginSchema
 from app.settings import Settings
 
@@ -75,13 +76,13 @@ class AuthService:
         if user.password != password:
             raise UserNotCorrectPasswordException
 
-    def generate_access_token(self, user_id: int) -> str:
-        expires_date_unix = (dt.datetime.utcnow() + timedelta(days=7)).timestamp()
-        token = jwt.encode(
-            {'user_id': user_id, 'expire': expires_date_unix},
-            self.settings.JWT_SECRET_KEY,
-            algorithm=self.settings.JWT_ENCODE_ALG)
-        return token
+    def generate_access_token(self, user_id: str):
+        payload = {
+            "user_id": user_id,
+            "expire": (dt.datetime.now(tz=datetime.UTC) + timedelta(days=7)).timestamp()
+        }
+        encoded_jwt = jwt.encode(payload, self.settings.JWT_SECRET_KEY, algorithm=self.settings.JWT_ENCODE_ALG)
+        return encoded_jwt
 
     def get_user_id_from_access_token(self, access_token: str) -> int:
         try:
